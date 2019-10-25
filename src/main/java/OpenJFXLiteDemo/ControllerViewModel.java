@@ -1,6 +1,7 @@
 package OpenJFXLiteDemo;
 
 import com.dukescript.api.javafx.beans.FXBeanInfo;
+import java.util.Arrays;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -42,11 +43,10 @@ public class ControllerViewModel implements FXBeanInfo.Provider {
 
      return new ControllerViewModel();
      */
-
     private BooleanProperty smScreen = new SimpleBooleanProperty(this, "smScreen", false);
     private StringProperty appName = new SimpleStringProperty(this, "appName", "App Name");
     private StringProperty userLogin = new SimpleStringProperty(this, "userLogin", "john.hancock@oracle.com");
-    private ListProperty<String> footerLinks = new SimpleListProperty<>(this, "footerLinks", FXCollections.observableArrayList());
+    private ListProperty<FooterLink> footerLinks = new SimpleListProperty<>(this, "footerLinks", FXCollections.observableArrayList());
     private FXBeanInfo info;
 
     public ControllerViewModel() {
@@ -57,11 +57,44 @@ public class ControllerViewModel implements FXBeanInfo.Provider {
                 .property(userLogin)
                 .property(footerLinks)
                 .build();
+        footerLinks.addAll(Arrays.asList(
+                new FooterLink("About Oracle", "aboutOracle", "http://www.oracle.com/us/corporate/index.html#menu-about"),
+                new FooterLink("Contact Us", "contactUs", "http://www.oracle.com/us/corporate/contact/index.html"),
+                new FooterLink("Legal Notices", "legalNotices", "http://www.oracle.com/us/legal/index.html"),
+                new FooterLink("Terms Of Use", "termsOfUse", "http://www.oracle.com/us/legal/terms/index.html"),
+                new FooterLink("Your Privacy Rights", "yourPrivacyRights", "http://www.oracle.com/us/legal/privacy/index.html")
+        ));
     }
 
     @Override
     public FXBeanInfo getFXBeanInfo() {
         return info;
+    }
+
+    private static class FooterLink implements FXBeanInfo.Provider {
+
+        private StringProperty name = new SimpleStringProperty(this, "name");
+        private StringProperty linkId = new SimpleStringProperty(this, "linkId");
+        private StringProperty linkTarget = new SimpleStringProperty(this, "linkTarget");
+        private FXBeanInfo info;
+
+        public FooterLink(String name, String linkId, String linkTarget) {
+            this.name.set(name);
+            this.linkId.set(linkId);
+            this.linkTarget.set(linkTarget);
+            info = FXBeanInfo
+                    .newBuilder(this)
+                    .property(this.name)
+                    .property(this.linkId)
+                    .property(this.linkTarget)
+                    .build();
+        }
+
+        @Override
+        public FXBeanInfo getFXBeanInfo() {
+            return info;
+        }
+
     }
 
 }
