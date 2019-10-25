@@ -1,40 +1,33 @@
 package OpenJFXLiteDemo;
 
-import com.dukescript.api.javafx.beans.FXBeanInfo;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.IntegerBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import static net.java.html.json.Models.applyBindings;
-
-public final class Demo implements FXBeanInfo.Provider {
-    private final StringProperty desc = new SimpleStringProperty(this, "desc", "Buy Milk");
-    private final ListProperty<String> todos = new SimpleListProperty<>(this, "todos", FXCollections.observableArrayList());
-    private final IntegerBinding numTodos = Bindings.createIntegerBinding(todos::size, todos);
-
-    void addTodo() {
-        todos.getValue().add(desc.getValue().toUpperCase());
-        desc.setValue("");
-    }
-
-    private final FXBeanInfo info = FXBeanInfo.newBuilder(this)
-            .property(desc)
-            .property(todos)
-            .property("numTodos", numTodos)
-            .action("addTodo", this::addTodo)
-            .build();
-
-    @Override
-    public FXBeanInfo getFXBeanInfo() {
-        return info;
-    }
-
-    public static void onPageLoad() {
-        Demo model = new Demo();
-        applyBindings(model);
-    }
+ import net.java.html.js.JavaScriptBody;
+ import net.java.html.json.Models;
+ 
+ public final class Demo {
+     @JavaScriptBody(args = {}, javacall = true, body =
+         "window.fxControllers = {};\n" +
+         "window.fxControllers.create = function(name, ko, arr) {\n" +
+         "  return @OpenJFXLiteDemo.Demo::createModel0(Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;)(name, ko, arr); \n" +
+         "};"
+     )
+     private static native void registerViewModels();
+ 
+     static Object createModel0(String name, Object ko, Object[] arr) {
+         Object fxModel = createModel(name, ko, arr);
+         Object raw = Models.toRaw(fxModel);
+         return raw;
+     }
+ 
+     private static Object createModel(String name, Object ko, Object[] arr) {
+         switch (name) {
+ //            case "ControllerViewModel": return new ControllerViewModel();
+             default:
+                 throw new IllegalArgumentException(name);
+         }
+     }
+ 
+     public static void onPageLoad() {
+         registerViewModels();
+      }
 
 }

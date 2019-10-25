@@ -8,6 +8,7 @@
  */
 define(['ojs/ojresponsiveutils', 'ojs/ojresponsiveknockoututils', 'knockout', 'ojs/ojknockout'],
   function(ResponsiveUtils, ResponsiveKnockoutUtils, ko) {
+     /*
      function ControllerViewModel() {
        var self = this;
 
@@ -37,5 +38,9 @@ define(['ojs/ojresponsiveutils', 'ojs/ojresponsiveknockoututils', 'knockout', 'o
      }
 
      return new ControllerViewModel();
+      */
+    window.ko = ko;
+    var model = window.fxControllers.create("ControllerViewModel", ko, [ResponsiveUtils, ResponsiveKnockoutUtils]);
+    return model;
   }
 );
