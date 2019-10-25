@@ -20,7 +20,7 @@ package OpenJFXLiteDemo;
  
      private static Object createModel(String name, Object ko, Object[] arr) {
          switch (name) {
- //            case "ControllerViewModel": return new ControllerViewModel();
+             case "ControllerViewModel": return new ControllerViewModel();
              default:
                  throw new IllegalArgumentException(name);
          }
