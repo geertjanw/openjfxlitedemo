@@ -80,7 +80,10 @@
           <ul>
             <oj-bind-for-each data="[[footerLinks]]">
               <template>
-                <li><a :id="[[$current.data.linkId]]" :href="[[$current.data.linkTarget]]"><oj-bind-text value="[[$current.data.name]]"></oj-bind-text></a></li>
+                <li>
+                    <oj-button on-oj-action="[[$current.data.onClick]]"><oj-bind-text value="[[$current.data.name]]"></oj-bind-text></oj-button>
+                    <!--<a :id="[[$current.data.linkId]]" :on-oj-action="[[$current.data.oick]]"><oj-bind-text value="[[$current.data.name]]"></oj-bind-text></a>-->
+                </li>
               </template>
             </oj-bind-for-each>
           </ul>

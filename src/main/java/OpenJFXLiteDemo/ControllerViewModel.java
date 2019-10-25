@@ -1,5 +1,6 @@
 package OpenJFXLiteDemo;
 
+import com.dukescript.api.javafx.beans.ActionDataEvent;
 import com.dukescript.api.javafx.beans.FXBeanInfo;
 import java.util.Arrays;
 import javafx.beans.property.BooleanProperty;
@@ -87,7 +88,12 @@ public class ControllerViewModel implements FXBeanInfo.Provider {
                     .property(this.name)
                     .property(this.linkId)
                     .property(this.linkTarget)
+                    .action("onClick", this::onClick)
                     .build();
+        }
+        
+        void onClick(ActionDataEvent ade) {
+            System.out.println("hello");
         }
 
         @Override
