@@ -1,0 +1,126 @@
+commit 2eb45197d301f6d25b08784adefddea123e14251
+Author: Jaroslav Tulach <jaroslav.tulach@oracle.com>
+Date:   Fri Oct 25 06:52:57 2019 +0200
+
+    Infrastructure to create Open JFX Lite controllers
+
+diff --git a/build.gradle b/build.gradle
+index cbc9330..bd1f44f 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -1,8 +1,18 @@
++buildscript {
++    repositories {
++        mavenCentral()
++    }
++    dependencies {
++        classpath 'org.netbeans.html:html4j-maven-plugin:1.6.1'
++    }
++}
++
+ plugins {
+     id "me.tatarka.retrolambda" version "3.7.1"
+ }
+ 
+ apply plugin: 'java'
++apply plugin: 'html4j'
+ 
+ group 'com.dukescript.demo'
+ version '1.0-SNAPSHOT'
+@@ -18,6 +28,7 @@ sourceCompatibility = '1.8'
+ 
+ dependencies {
+     compile "org.netbeans.html:net.java.html.json:1.6.1"
++    compile "org.netbeans.html:net.java.html.boot:1.6.1"
+     compile "com.dukescript.api:javafx.base:8.60.11"
+     compile "com.dukescript.api:javafx.beaninfo:0.5"
+     runtime "org.netbeans.html:ko4j:1.6.1"
+diff --git a/src/main/java/oraclejetdemo/Demo.java b/src/main/java/oraclejetdemo/Demo.java
+index dc8ce95..c29c96c 100644
+--- a/src/main/java/oraclejetdemo/Demo.java
++++ b/src/main/java/oraclejetdemo/Demo.java
+@@ -1,40 +1,32 @@
+ package oraclejetdemo;
+ 
+-import com.dukescript.api.javafx.beans.FXBeanInfo;
+-import javafx.beans.binding.Bindings;
+-import javafx.beans.binding.IntegerBinding;
+-import javafx.beans.property.ListProperty;
+-import javafx.beans.property.SimpleListProperty;
+-import javafx.beans.property.SimpleStringProperty;
+-import javafx.beans.property.StringProperty;
+-import javafx.collections.FXCollections;
+-import static net.java.html.json.Models.applyBindings;
++import net.java.html.js.JavaScriptBody;
++import net.java.html.json.Models;
+ 
+-public final class Demo implements FXBeanInfo.Provider {
+-    private final StringProperty desc = new SimpleStringProperty(this, "desc", "Buy Milk");
+-    private final ListProperty<String> todos = new SimpleListProperty<>(this, "todos", FXCollections.observableArrayList());
+-    private final IntegerBinding numTodos = Bindings.createIntegerBinding(todos::size, todos);
++public final class Demo {
++    @JavaScriptBody(args = {}, javacall = true, body =
++        "window.fxControllers = {};\n" +
++        "window.fxControllers.create = function(name, ko, arr) {\n" +
++        "  return @oraclejetdemo.Demo::createModel0(Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;)(name, ko, arr); \n" +
++        "};"
++    )
++    private static native void registerViewModels();
+ 
+-    void addTodo() {
+-        todos.getValue().add(desc.getValue());
+-        desc.setValue("");
++    static Object createModel0(String name, Object ko, Object[] arr) {
++        Object fxModel = createModel(name, ko, arr);
++        Object raw = Models.toRaw(fxModel);
++        return raw;
+     }
+ 
+-    private final FXBeanInfo info = FXBeanInfo.newBuilder(this)
+-            .property(desc)
+-            .property(todos)
+-            .property("numTodos", numTodos)
+-            .action("addTodo", this::addTodo)
+-            .build();
+-
+-    @Override
+-    public FXBeanInfo getFXBeanInfo() {
+-        return info;
++    private static Object createModel(String name, Object ko, Object[] arr) {
++        switch (name) {
++//            case "ControllerViewModel": return new ControllerViewModel();
++            default:
++                throw new IllegalArgumentException(name);
++        }
+     }
+ 
+     public static void onPageLoad() {
+-        Demo model = new Demo();
+-        applyBindings(model);
++        registerViewModels();
+     }
+-
+ }
+\ No newline at end of file
+diff --git a/src/main/webapp/pages/js/appController.js b/src/main/webapp/pages/js/appController.js
+index 06177e5..088c472 100644
+--- a/src/main/webapp/pages/js/appController.js
++++ b/src/main/webapp/pages/js/appController.js
+@@ -8,6 +8,7 @@
+  */
+ define(['ojs/ojresponsiveutils', 'ojs/ojresponsiveknockoututils', 'knockout', 'ojs/ojknockout'],
+   function(ResponsiveUtils, ResponsiveKnockoutUtils, ko) {
++     /*
+      function ControllerViewModel() {
+        var self = this;
+ 
+@@ -37,5 +38,9 @@ define(['ojs/ojresponsiveutils', 'ojs/ojresponsiveknockoututils', 'knockout', 'o
+      }
+ 
+      return new ControllerViewModel();
++      */
++    window.ko = ko;
++    var model = window.fxControllers.create("ControllerViewModel", ko, [ResponsiveUtils, ResponsiveKnockoutUtils]);
++    return model;
+   }
+ );
