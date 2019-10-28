@@ -11,10 +11,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 
-public class ControllerViewModel implements FXBeanInfo.Provider {
+public class RootViewModel implements FXBeanInfo.Provider {
 
     /*
-     function ControllerViewModel() {
+     function RootViewModel() {
        var self = this;
 
       // Media queries for repsonsive layouts
@@ -42,7 +42,7 @@ public class ControllerViewModel implements FXBeanInfo.Provider {
       ]);
      }
 
-     return new ControllerViewModel();
+     return new RootViewModel();
      */
     private BooleanProperty smScreen = new SimpleBooleanProperty(this, "smScreen", false);
     private StringProperty appName = new SimpleStringProperty(this, "appName", "App Name");
@@ -50,7 +50,7 @@ public class ControllerViewModel implements FXBeanInfo.Provider {
     private ListProperty<FooterLink> footerLinks = new SimpleListProperty<>(this, "footerLinks", FXCollections.observableArrayList());
     private FXBeanInfo info;
 
-    public ControllerViewModel() {
+    public RootViewModel() {
         info = FXBeanInfo
                 .newBuilder(this)
                 .property(smScreen)

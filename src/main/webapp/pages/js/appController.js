@@ -40,7 +40,7 @@ define(['ojs/ojresponsiveutils', 'ojs/ojresponsiveknockoututils', 'knockout', 'o
      return new ControllerViewModel();
       */
     window.ko = ko;
-    var model = window.fxControllers.create("ControllerViewModel", ko, [ResponsiveUtils, ResponsiveKnockoutUtils]);
+    var model = window.fxControllers.create("RootViewModel", ko, [ResponsiveUtils, ResponsiveKnockoutUtils]);
     return model;
   }
 );
