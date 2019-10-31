@@ -72,7 +72,7 @@ public class RootViewModel implements FXBeanInfo.Provider {
         return info;
     }
 
-    private static class FooterLink implements FXBeanInfo.Provider {
+    private class FooterLink implements FXBeanInfo.Provider {
 
         private StringProperty name = new SimpleStringProperty(this, "name");
         private StringProperty linkId = new SimpleStringProperty(this, "linkId");
@@ -93,7 +93,11 @@ public class RootViewModel implements FXBeanInfo.Provider {
         }
         
         void onClick(ActionDataEvent ade) {
-            System.out.println("hello");
+            if (Character.isUpperCase(userLogin.get().charAt(0))) {
+                userLogin.set(userLogin.get().toLowerCase());
+            } else {
+                userLogin.set(userLogin.get().toUpperCase());
+            }
         }
 
         @Override
