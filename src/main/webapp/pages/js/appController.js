@@ -6,8 +6,8 @@
 /*
  * Your application specific code will go here
  */
-define(['ojs/ojresponsiveutils', 'ojs/ojresponsiveknockoututils', 'knockout', 'ojs/ojknockout', 'java!OpenJFXLiteDemo.BrowserMain'],
-  function(ResponsiveUtils, ResponsiveKnockoutUtils, ko, java) {
+define(['ojs/ojresponsiveutils', 'ojs/ojresponsiveknockoututils', 'knockout', 'ojs/ojknockout', 'java!OpenJFXLiteDemo.BrowserMain', 'ojs/ojnavigationlist'],
+  function(ResponsiveUtils, ResponsiveKnockoutUtils, ko) {
      /*
      function ControllerViewModel() {
        var self = this;

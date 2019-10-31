@@ -28,10 +28,10 @@ public class RootViewModel implements FXBeanInfo.Provider {
       self.userLogin = ko.observable("john.hancock@oracle.com");
 
       // Footer
-      function footerLink(name, id, linkTarget) {
-        this.name = name;
-        this.linkId = id;
-        this.linkTarget = linkTarget;
+      function footerLink(id, id, disabled) {
+        this.id = id;
+        this.label = id;
+        this.disabled = disabled;
       }
       self.footerLinks = ko.observableArray([
         new footerLink('About Oracle', 'aboutOracle', 'http://www.oracle.com/us/corporate/index.html#menu-about'),
@@ -46,8 +46,10 @@ public class RootViewModel implements FXBeanInfo.Provider {
      */
     private BooleanProperty smScreen = new SimpleBooleanProperty(this, "smScreen", false);
     private StringProperty appName = new SimpleStringProperty(this, "appName", "App Name");
+    private StringProperty selectedItem = new SimpleStringProperty(this, "selectedItem", "dashboard");
     private StringProperty userLogin = new SimpleStringProperty(this, "userLogin", "john.hancock@oracle.com");
     private ListProperty<FooterLink> footerLinks = new SimpleListProperty<>(this, "footerLinks", FXCollections.observableArrayList());
+    private ListProperty<NavItem> listItems = new SimpleListProperty<>(this, "listItems", FXCollections.observableArrayList());
     private FXBeanInfo info;
 
     public RootViewModel() {
@@ -55,9 +57,17 @@ public class RootViewModel implements FXBeanInfo.Provider {
                 .newBuilder(this)
                 .property(smScreen)
                 .property(appName)
+                .property(selectedItem)
                 .property(userLogin)
+                .property(listItems)
                 .property(footerLinks)
                 .build();
+        listItems.addAll(Arrays.asList(
+                new NavItem("dashboard", "Dashboard", false),
+                new NavItem("customers", "Customers", false),
+                new NavItem("incidents", "Incidents", false),
+                new NavItem("about", "About", false)
+        ));
         footerLinks.addAll(Arrays.asList(
                 new FooterLink("About Oracle", "aboutOracle", "http://www.oracle.com/us/corporate/index.html#menu-about"),
                 new FooterLink("Contact Us", "contactUs", "http://www.oracle.com/us/corporate/contact/index.html"),
@@ -71,7 +81,41 @@ public class RootViewModel implements FXBeanInfo.Provider {
     public FXBeanInfo getFXBeanInfo() {
         return info;
     }
+    private class NavItem implements FXBeanInfo.Provider {
 
+        private StringProperty id = new SimpleStringProperty(this, "id");
+        private StringProperty label = new SimpleStringProperty(this, "label");
+        private BooleanProperty disabled = new SimpleBooleanProperty(this, "disabled");
+        private FXBeanInfo info;
+
+        public NavItem(String id, String label, Boolean disabled) {
+            this.id.set(id);
+            this.label.set(label);
+            this.disabled.set(disabled);
+            info = FXBeanInfo
+                    .newBuilder(this)
+                    .property(this.id)
+                    .property(this.label)
+                    .property(this.disabled)
+                    .action("onClick", this::onClick)
+                    .build();
+        }
+        
+        void onClick(ActionDataEvent ade) {
+            if (Character.isUpperCase(userLogin.get().charAt(0))) {
+                userLogin.set(userLogin.get().toLowerCase());
+            } else {
+                userLogin.set(userLogin.get().toUpperCase());
+            }
+        }
+
+        @Override
+        public FXBeanInfo getFXBeanInfo() {
+            return info;
+        }
+
+    }
+    
     private class FooterLink implements FXBeanInfo.Provider {
 
         private StringProperty name = new SimpleStringProperty(this, "name");
