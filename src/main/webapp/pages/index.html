@@ -78,7 +78,7 @@
                             <oj-bind-for-each data="[[listItems]]">
                                 <template>
                                     <li :id="[[$current.data.id]]" :class="[[{'oj-disabled': $current.data.disabled}]]">
-                                        <a href="#">
+                                        <a href="#" data-bind="click: $current.data.onClick">
                                             <oj-bind-text value="[[$current.data.label]]"></oj-bind-text>
                                         </a>
                                     </li>
