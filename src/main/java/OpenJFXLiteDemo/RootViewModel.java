@@ -11,7 +11,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 
-public class RootViewModel implements FXBeanInfo.Provider {
+@FXBeanInfo.Generate
+public class RootViewModel extends RootViewModelBase {
 
     /*
      function RootViewModel() {
@@ -44,24 +45,14 @@ public class RootViewModel implements FXBeanInfo.Provider {
 
      return new RootViewModel();
      */
-    private BooleanProperty smScreen = new SimpleBooleanProperty(this, "smScreen", false);
-    private StringProperty appName = new SimpleStringProperty(this, "appName", "App Name");
-    private StringProperty selectedItem = new SimpleStringProperty(this, "selectedItem", "dashboard");
-    private StringProperty userLogin = new SimpleStringProperty(this, "userLogin", "john.hancock@oracle.com");
-    private ListProperty<FooterLink> footerLinks = new SimpleListProperty<>(this, "footerLinks", FXCollections.observableArrayList());
-    private ListProperty<NavItem> listItems = new SimpleListProperty<>(this, "listItems", FXCollections.observableArrayList());
-    private FXBeanInfo info;
+    final BooleanProperty smScreen = new SimpleBooleanProperty(this, "smScreen", false);
+    final StringProperty appName = new SimpleStringProperty(this, "appName", "App Name");
+    final StringProperty selectedItem = new SimpleStringProperty(this, "selectedItem", "dashboard");
+    final StringProperty userLogin = new SimpleStringProperty(this, "userLogin", "john.hancock@oracle.com");
+    final ListProperty<FooterLink> footerLinks = new SimpleListProperty<>(this, "footerLinks", FXCollections.observableArrayList());
+    final ListProperty<NavItem> listItems = new SimpleListProperty<>(this, "listItems", FXCollections.observableArrayList());
 
     public RootViewModel() {
-        info = FXBeanInfo
-                .newBuilder(this)
-                .property(smScreen)
-                .property(appName)
-                .property(selectedItem)
-                .property(userLogin)
-                .property(listItems)
-                .property(footerLinks)
-                .build();
         listItems.addAll(Arrays.asList(
                 new NavItem("dashboard", "Dashboard", false),
                 new NavItem("customers", "Customers", false),
@@ -77,28 +68,17 @@ public class RootViewModel implements FXBeanInfo.Provider {
         ));
     }
 
-    @Override
-    public FXBeanInfo getFXBeanInfo() {
-        return info;
-    }
-    private class NavItem implements FXBeanInfo.Provider {
+    @FXBeanInfo.Generate
+    class NavItem extends NavItemBase {
 
-        private StringProperty id = new SimpleStringProperty(this, "id");
-        private StringProperty label = new SimpleStringProperty(this, "label");
-        private BooleanProperty disabled = new SimpleBooleanProperty(this, "disabled");
-        private FXBeanInfo info;
+        final String id;
+        final String label;
+        final boolean disabled;
 
-        public NavItem(String id, String label, Boolean disabled) {
-            this.id.set(id);
-            this.label.set(label);
-            this.disabled.set(disabled);
-            info = FXBeanInfo
-                    .newBuilder(this)
-                    .property(this.id)
-                    .property(this.label)
-                    .property(this.disabled)
-                    .action("onClick", this::onClick)
-                    .build();
+        public NavItem(String id, String label, boolean disabled) {
+            this.id = id;
+            this.label = label;
+            this.disabled = disabled;
         }
         
         void onClick(ActionDataEvent ade) {
@@ -108,32 +88,19 @@ public class RootViewModel implements FXBeanInfo.Provider {
                 userLogin.set(userLogin.get().toUpperCase());
             }
         }
-
-        @Override
-        public FXBeanInfo getFXBeanInfo() {
-            return info;
-        }
-
     }
-    
-    private class FooterLink implements FXBeanInfo.Provider {
 
-        private StringProperty name = new SimpleStringProperty(this, "name");
-        private StringProperty linkId = new SimpleStringProperty(this, "linkId");
-        private StringProperty linkTarget = new SimpleStringProperty(this, "linkTarget");
-        private FXBeanInfo info;
+    @FXBeanInfo.Generate
+    class FooterLink extends FooterLinkBase {
+
+        final String name;
+        final String linkId;
+        final String linkTarget;
 
         public FooterLink(String name, String linkId, String linkTarget) {
-            this.name.set(name);
-            this.linkId.set(linkId);
-            this.linkTarget.set(linkTarget);
-            info = FXBeanInfo
-                    .newBuilder(this)
-                    .property(this.name)
-                    .property(this.linkId)
-                    .property(this.linkTarget)
-                    .action("onClick", this::onClick)
-                    .build();
+            this.name = name;
+            this.linkId = linkId;
+            this.linkTarget = linkTarget;
         }
         
         void onClick(ActionDataEvent ade) {
@@ -143,12 +110,5 @@ public class RootViewModel implements FXBeanInfo.Provider {
                 userLogin.set(userLogin.get().toUpperCase());
             }
         }
-
-        @Override
-        public FXBeanInfo getFXBeanInfo() {
-            return info;
-        }
-
     }
-
 }
